@@ -87,10 +87,10 @@ pintar(_,_,[G|Grid],X,Y,[G|Grid]):-
 pintarContorno(Ant,Color,RtaA,X,Y,Rta):-
 	Xmen is X-1,Ymen is Y-1,
 	Xmas is X+1,Ymas is Y+1,
-	pintar(Ant,Color,RtaA,Xmen,Ymen,RtaB),
-	pintar(Ant,Color,RtaB,Xmas,Ymen,RtaC),
-	pintar(Ant,Color,RtaC,Xmen,Ymas,RtaD),
-	pintar(Ant,Color,RtaD,Xmas,Ymas,Rta).
+	pintar(Ant,Color,RtaA,Xmen,Y,RtaB),
+	pintar(Ant,Color,RtaB,Xmas,Y,RtaC),
+	pintar(Ant,Color,RtaC,X,Ymas,RtaD),
+	pintar(Ant,Color,RtaD,X,Ymen,Rta).
 
 getColorEnPos([G|_],X,0,Rta):-
 	getColorEnLista(G,X,Rta).
