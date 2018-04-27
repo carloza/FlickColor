@@ -123,6 +123,6 @@ largo([_|Xs],Rta):- largo(Xs,Rtaa),
 	Rta is Rtaa+1.
 
 %metodo para calcular las dimenciones de la grilla
-dimensiones([G|Grid],LargoLL,LargoL):-
+dimensiones([G|Grid],Ancho,Alto):-
 	largo([G|Grid],Ancho),
 	largo(G, Alto).
