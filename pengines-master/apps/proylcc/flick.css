@@ -1,0 +1,50 @@
+.mainPanel {
+    display: flex;
+    justify-content: center;
+    margin: 30px;
+}
+
+.leftBar {
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+}
+
+#grid {
+    display: grid;
+    grid-template-columns: repeat(14, 40px);
+    grid-template-rows: repeat(14, 40px);
+    margin: 20px;
+}
+
+.buttonsPanel {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto;
+    grid-gap: 15px;
+    justify-content: center;
+}
+
+.colorBtn {
+    height: 40px;
+    width: 40px;
+    border: none;
+    cursor: pointer;
+}
+
+.turnsPanel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40px;
+    font-size: 20px;
+    color: darkblue;
+}
+
+.turnsLab {
+    text-transform: uppercase;
+}
+
+#turnsNum {
+    margin-top: 10px;
+}
