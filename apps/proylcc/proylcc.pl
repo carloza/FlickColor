@@ -74,10 +74,9 @@ pintar(Ant,Color,Grid,X,Y,Rta):-
 	cambiarColorEnPosicion(Color,Grid,X,Y,RtaA),
 	pintarContorno(Ant,Color,RtaA,X,Y,Rta).
 
-pintar(Ant,_,Grid,X,Y,Rta):-
+pintar(Ant,_,Grid,X,Y,Grid):-
 	getColorEnPos(Grid,X,Y,PosCol),
-	Ant\=PosCol,
-	Rta=Grid.
+	Ant\=PosCol.
 
 pintar(_,_,[G|Grid],X,Y,[G|Grid]):-
 	X<0;
