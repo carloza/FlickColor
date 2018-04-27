@@ -64,6 +64,7 @@ grid(3, [
 flick(Grid,Color,FGrid):-
 	Grid = [F|_],
 	F = [X|_],
+	%dimensiones([G|Grid],LargoX,LargoY),
 	pintar(X,Color,Grid,0,0,FGrid).
 	%FGrid = [[Color|Xs]|Fs].
 
@@ -82,7 +83,7 @@ pintar(_,_,[G|Grid],X,Y,[G|Grid]):-
 	X<0;
 	Y<0;
 	largo([G|Grid],LF),	X>=LF;
-	largo(G,LC),	X>=LC.
+	largo(G,LC),	Y>=LC.
 
 pintarContorno(Ant,Color,RtaA,X,Y,Rta):-
 	Xmen is X-1,Ymen is Y-1,
@@ -122,6 +123,6 @@ largo([_|Xs],Rta):- largo(Xs,Rtaa),
 	Rta is Rtaa+1.
 
 %metodo para calcular las dimenciones de la grilla
-dimensiones([G|Grid],Ancho,Alto):-
+dimensiones([G|Grid],LargoLL,LargoL):-
 	largo([G|Grid],Ancho),
 	largo(G, Alto).
