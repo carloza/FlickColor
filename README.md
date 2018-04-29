@@ -12,13 +12,7 @@ juego "flick color" en un pagina web local con logica en prolog
 
 # Gracias especiales
 
-- Torbjörn Lager 
-University of Gothenburg 
-Sweden 
-E-mail: lager@ling.gu.se 
-- Jan Wielemaker 
-VU University Amsterdam 
-The Netherlands 
-E-mail: J.Wielemaker@vu.nl
+- Torbjörn Lager, University of Gothenburg, Sweden, E-mail: lager@ling.gu.se 
+- Jan Wielemaker, VU University Amsterdam, The Netherlands, E-mail: J.Wielemaker@vu.nl
 
 http://www.swi-prolog.org/pengines/
