@@ -64,51 +64,61 @@ grid(3, [
 flick(Grid,Color,FGrid):-
 	Grid = [F|_],
 	F = [X|_],
-	%dimensiones([G|Grid],LargoX,LargoY),
-	pintar(X,Color,Grid,0,0,FGrid).
+	pintar(X,Color,Grid,0,0,FGrid,_).
 	%FGrid = [[Color|Xs]|Fs].
 
-pintar(Ant,Color,Grid,X,Y,Rta):-
+%metodo para pintar en un matriz de color "Color" las celda ingresada 
+%y sus adyacentes si estas eran el color "Ant"
+pintar(Ant,Color,Grid,X,Y,Rta,CantPintado):-
 	getColorEnPos(Grid,X,Y,PosCol),
 	Ant=PosCol,
 	cambiarColorEnPosicion(Color,Grid,X,Y,RtaA),
-	pintarContorno(Ant,Color,RtaA,X,Y,Rta).
-
-pintar(Ant,_,Grid,X,Y,Grid):-
+	pintarContorno(Ant,Color,RtaA,X,Y,Rta,CPTotal),
+	%agrego este contador para la ayuda
+	CantPintado is CPTotal+1.
+pintar(Ant,_,Grid,X,Y,Grid,_):-
 	getColorEnPos(Grid,X,Y,PosCol),
 	Ant\=PosCol.
-
-pintar(_,_,[G|Grid],X,Y,[G|Grid]):-
+pintar(_,_,[G|Grid],X,Y,[G|Grid],_):-
 	X<0;
 	Y<0;
 	largo([G|Grid],LF),	X>=LF;
 	largo(G,LC),	Y>=LC.
 
-pintarContorno(Ant,Color,RtaA,X,Y,Rta):-
+%metodo para pintar las celdas directamente adyacente a un celdas
+%arriba, abajo, izquierda y derecha
+pintarContorno(Ant,Color,Grid,X,Y,Rta,CantPintado):-
 	Xmen is X-1,Ymen is Y-1,
 	Xmas is X+1,Ymas is Y+1,
-	pintar(Ant,Color,RtaA,Xmen,Y,RtaB),
-	pintar(Ant,Color,RtaB,Xmas,Y,RtaC),
-	pintar(Ant,Color,RtaC,X,Ymas,RtaD),
-	pintar(Ant,Color,RtaD,X,Ymen,Rta).
+	pintar(Ant,Color,Grid,Xmen,Y,RtaA,CPA),
+	pintar(Ant,Color,RtaA,Xmas,Y,RtaB,CPB),
+	pintar(Ant,Color,RtaB,X,Ymas,RtaC,CPC),
+	pintar(Ant,Color,RtaC,X,Ymen,Rta,CPD),
+	%agrego este contador para la ayuda
+	CantPintado is CPA+CPB+CPC+CPD.
 
+%metodo recursivo para obtener el elemento en una posicion de la matriz
 getColorEnPos([G|_],X,0,Rta):-
 	getColorEnLista(G,X,Rta).
-
 getColorEnPos([_|Grid],X,Y,Rta):-
 	YY is Y-1,
 	getColorEnPos(Grid,X,YY,Rta).
 
+%metodo recursivo para obtener el elemento en una posicion de la lista
 getColorEnLista([L|_],0,L).
 getColorEnLista([_|Ls],X,Rta):-
 	XX is X-1,
 	getColorEnLista(Ls,XX,Rta).
 
+%metodo recursivo para cambiar un elemento en un lista
+%segun la posicion ingresada
 reemplazarEnLista(Color,[_|Ls],0,[Color|Ls]).
 reemplazarEnLista(Color,[L|Ls],X,[L|Rta]):-
 	XX is X-1,
 	reemplazarEnLista(Color,Ls,XX,Rta).
 
+%metodo recursivo para cambiar un elemento en un matriz
+%segun la coordenada ingresada
 cambiarColorEnPosicion(Color,[G|Grid],X,0,[Rta|Grid]):-
 	reemplazarEnLista(Color,G,X,Rta).
 
@@ -125,3 +135,11 @@ largo([_|Xs],Rta):- largo(Xs,Rtaa),
 dimensiones([G|Grid],Ancho,Alto):-
 	largo([G|Grid],Ancho),
 	largo(G, Alto).
+
+%metodo para calcular cuantas celdas se incorporan añ cambiar a un cierto color
+cantIncorpora(Grid,Color,Rta):-
+	Grid = [F|_],
+	F = [X|_],
+	pintar(X,Color,Grid,0,0,FGrid,RtaA),
+	pintar(Color,aa,FGrid,0,0,_,RtaB),
+	Rta is RtaB-RtaA.
