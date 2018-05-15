@@ -184,10 +184,6 @@ adyacenteCAux(Grid,(X,Y),Color,LC,Rta):-
 	(derecha((X,Y),(Xd,Yd)), adyacenteCAux(Grid,(Xd,Yd),Color,LCAux,RtaAux)),
 	(abajo((X,Y),(Xa,Ya)), adyacenteCAux(Grid,(Xa,Ya),Color,RtaAux,Rta)).
 
-mismosColores((X1,Y1),(X2,Y2)):- 
-	getColorEnPos(Grid,X1,Y1,C1), 
-	getColorEnPos(Grid,X2,Y2,C2), 
-	C1 == C2.
 	
 /*Obtener nuevos pares segun direccion*/	
 derecha((X,Y),(Xn,Y)):- Xn is X + 1.
