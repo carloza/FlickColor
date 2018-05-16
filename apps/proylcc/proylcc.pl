@@ -1,8 +1,11 @@
 :- module(proylcc, 
 	[  
 		grid/2,
-		flick/3
+		flick/3,
+		ayudaBasica/2,
+		ayudaAdicional/3
 	]).
+
 
 grid(1, [
 		 [y,g,b,g,v,y,p,v,b,p,v,p,v,r],
@@ -61,64 +64,60 @@ grid(3, [
 %
 % FGrid es el resultado de hacer 'flick' de la grilla Grid con el color Color. 
 
+flick(Grid,Color,Grid):-
+	Grid = [F|_],
+	F = [X|_],
+	X == Color.
+	
 flick(Grid,Color,FGrid):-
 	Grid = [F|_],
 	F = [X|_],
-	pintar(X,Color,Grid,0,0,FGrid,_).
+	pintar(X,Color,Grid,0,0,FGrid).
 	%FGrid = [[Color|Xs]|Fs].
 
-%metodo para pintar en un matriz de color "Color" las celda ingresada 
-%y sus adyacentes si estas eran el color "Ant"
-pintar(Ant,Color,Grid,X,Y,Rta,CantPintado):-
+
+pintar(Ant,Color,Grid,X,Y,Rta):-
 	getColorEnPos(Grid,X,Y,PosCol),
 	Ant=PosCol,
 	cambiarColorEnPosicion(Color,Grid,X,Y,RtaA),
-	pintarContorno(Ant,Color,RtaA,X,Y,Rta,CPTotal),
-	%agrego este contador para la ayuda
-	CantPintado is CPTotal+1.
-pintar(Ant,_,Grid,X,Y,Grid,_):-
+	pintarContorno(Ant,Color,RtaA,X,Y,Rta).
+
+pintar(Ant,_,Grid,X,Y,Rta):-
 	getColorEnPos(Grid,X,Y,PosCol),
-	Ant\=PosCol.
-pintar(_,_,[G|Grid],X,Y,[G|Grid],_):-
+	Ant\=PosCol,
+	Rta=Grid.
+
+pintar(_,_,[G|Grid],X,Y,[G|Grid]):-
 	X<0;
 	Y<0;
-	largo([G|Grid],LF),	X>=LF;
-	largo(G,LC),	Y>=LC.
+	(largo([G|Grid],LF),	X>=LF);
+	(largo(G,LC),	Y>=LC).
 
-%metodo para pintar las celdas directamente adyacente a un celdas
-%arriba, abajo, izquierda y derecha
-pintarContorno(Ant,Color,Grid,X,Y,Rta,CantPintado):-
+pintarContorno(Ant,Color,RtaA,X,Y,Rta):-
 	Xmen is X-1,Ymen is Y-1,
 	Xmas is X+1,Ymas is Y+1,
-	pintar(Ant,Color,Grid,Xmen,Y,RtaA,CPA),
-	pintar(Ant,Color,RtaA,Xmas,Y,RtaB,CPB),
-	pintar(Ant,Color,RtaB,X,Ymas,RtaC,CPC),
-	pintar(Ant,Color,RtaC,X,Ymen,Rta,CPD),
-	%agrego este contador para la ayuda
-	CantPintado is CPA+CPB+CPC+CPD.
+	pintar(Ant,Color,RtaA,Xmen,Y,RtaB),
+	pintar(Ant,Color,RtaB,Xmas,Y,RtaC),
+	pintar(Ant,Color,RtaC,X,Ymas,RtaD),
+	pintar(Ant,Color,RtaD,X,Ymen,Rta).
 
-%metodo recursivo para obtener el elemento en una posicion de la matriz
 getColorEnPos([G|_],X,0,Rta):-
 	getColorEnLista(G,X,Rta).
+
 getColorEnPos([_|Grid],X,Y,Rta):-
 	YY is Y-1,
 	getColorEnPos(Grid,X,YY,Rta).
 
-%metodo recursivo para obtener el elemento en una posicion de la lista
 getColorEnLista([L|_],0,L).
 getColorEnLista([_|Ls],X,Rta):-
 	XX is X-1,
 	getColorEnLista(Ls,XX,Rta).
 
-%metodo recursivo para cambiar un elemento en un lista
-%segun la posicion ingresada
 reemplazarEnLista(Color,[_|Ls],0,[Color|Ls]).
 reemplazarEnLista(Color,[L|Ls],X,[L|Rta]):-
 	XX is X-1,
 	reemplazarEnLista(Color,Ls,XX,Rta).
 
-%metodo recursivo para cambiar un elemento en un matriz
-%segun la coordenada ingresada
 cambiarColorEnPosicion(Color,[G|Grid],X,0,[Rta|Grid]):-
 	reemplazarEnLista(Color,G,X,Rta).
 
@@ -132,14 +131,113 @@ largo([_|Xs],Rta):- largo(Xs,Rtaa),
 	Rta is Rtaa+1.
 
 %metodo para calcular las dimenciones de la grilla
-dimensiones([G|Grid],Ancho,Alto):-
+dimenciones([G|Grid],Ancho,Alto):-
 	largo([G|Grid],Ancho),
 	largo(G, Alto).
+	
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% contarCantColor(C,Grid,Res)
+%
+% Cuenta la cantidad de colores igual a c que hay en Grid y lo retorna en Res.
 
-%metodo para calcular cuantas celdas se incorporan añ cambiar a un cierto color
-cantIncorpora(Grid,Color,Rta):-
-	Grid = [F|_],
-	F = [X|_],
-	pintar(X,Color,Grid,0,0,FGrid,RtaA),
-	pintar(Color,aa,FGrid,0,0,_,RtaB),
-	Rta is RtaB-RtaA.
+contarCantColor(C,[G|Grid],Res):- 
+	recorrerLista(C,G,ResA), 
+	contarCantColor(C,Grid,ResB), 
+	Res is ResA + ResB.
+
+contarCantColor(C,[],0). 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% recorrerLista(C,Lista,Res)
+% 
+% Metodo auxiliar que recorre Lista contando la cantidad de apariciones de C que sera retornada en Res.
+
+recorrerLista(C,[C | Cs],Res):- 
+	recorrerLista(C,Cs,ResA), 
+	Res is ResA + 1. 
+	
+recorrerLista(C,[Cn | Cs],Res):- 
+	C \= Cn,
+	recorrerLista(C,Cs,Res).
+
+recorrerLista(C,[],0). 
+
+/*
+adyanceteC/4
+*/
+
+adyacenteC(Grid,(X,Y),Color,Rta):-
+	adyacenteCAux(Grid,(X,Y),Color,[],RtaTemp),
+	lsr_longitud(RtaTemp,Rta). 
+
+adyacenteCAux(Grid,(X,Y),Color,LC,LC):- 
+	getColorEnPos(Grid,X,Y,ColorRta), 
+	ColorRta \= Color. 
+	
+adyacenteCAux(Grid,(X,Y),Color,LC,Rta):- 
+	getColorEnPos(Grid,X,Y,ColorRta), 
+	
+	ColorRta == Color, 
+	lsr_agregarElem(LC,(X,Y),LCAux),
+	(derecha((X,Y),(Xd,Yd)), adyacenteCAux(Grid,(Xd,Yd),Color,LCAux,RtaAux)),
+	(abajo((X,Y),(Xa,Ya)), adyacenteCAux(Grid,(Xa,Ya),Color,RtaAux,Rta)).
+
+	
+/*Obtener nuevos pares segun direccion*/	
+derecha((X,Y),(Xn,Y)):- Xn is X + 1.
+abajo((X,Y),(X,Yn)):- Yn is Y + 1.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% ayudaBasica/2
+% 
+% Retorna un arreglo indicando la cantidad de celdas que cambian en caso de 
+% seleccionar dicho color para la proxima jugada. 
+% Grid: grilla a ser analizada.
+% [red, violet, pink, green, blue, yellow]
+
+ayudaBasica(Grid,[Red,Violet,Pink,Green,Blue,Yellow]):-
+	(getColorEnPos(Grid,0,0,ColorRta),adyacenteC(Grid,(0,0),ColorRta,ConjuntoC)),
+	(flick(Grid,"r",GridR), adyacenteC(GridR,(0,0),"r",ConjuntoCR), Red is ConjuntoCR - ConjuntoC),
+	(flick(Grid,"v",GridV), adyacenteC(GridV,(0,0),"v",ConjuntoCV), Violet is ConjuntoCV - ConjuntoC),
+	(flick(Grid,"p",GridP), adyacenteC(GridP,(0,0),"p",ConjuntoCP), Pink is ConjuntoCP - ConjuntoC),
+	(flick(Grid,"g",GridG), adyacenteC(GridG,(0,0),"g",ConjuntoCG), Green is ConjuntoCG - ConjuntoC),
+	(flick(Grid,"b",GridB), adyacenteC(GridB,(0,0),"b",ConjuntoCB), Blue is ConjuntoCB - ConjuntoC),
+	(flick(Grid,"y",GridY), adyacenteC(GridY,(0,0),"y",ConjuntoCY), Yellow is ConjuntoCY - ConjuntoC).
+	
+	
+	
+ayudaAdicional(Grid,PrimerColor,[Red,Violet,Pink,Green,Blue,Yellow]):-
+	(getColorEnPos(Grid,0,0,ColorRta),adyacenteC(Grid,(0,0),ColorRta,ConjuntoC)),
+	(flick(Grid,PrimerColor,GridN),adyacenteC(GridN,(0,0),PrimerColor,ConjuntoPC), PrimerColorBeneficio is ConjuntoPC - ConjuntoC),
+	ayudaBasica(GridN,[Red1,Violet1,Pink1,Green1,Blue1,Yellow1]),
+	Red is Red1 + PrimerColorBeneficio,
+	Violet is Violet1 + PrimerColorBeneficio,
+	Pink is Pink1 + PrimerColorBeneficio,
+	Green is Green1 + PrimerColorBeneficio,
+	Blue is Blue1 + PrimerColorBeneficio,
+	Yellow is Yellow1 + PrimerColorBeneficio.
+	
+	
+/* Lista sin repeticiones */
+%lsr_agregarElem([],E,[E]).
+lsr_agregarElem(L,E,[E | L]):- not(lsr_perteneceLista(L,E)).
+lsr_agregarElem(L,E,L):- lsr_perteneceLista(L,E). 
+
+lsr_perteneceLista([E | Es], E).
+lsr_perteneceLista([El | Es], E):- 
+	E \= El, 
+	lsr_perteneceLista(Es,E).
+	
+lsr_longitud([],0).
+lsr_longitud([E | Es],Rta):- 
+	lsr_longitud(Es,Rta1), 
+	Rta is Rta1 + 1.
+	
+lsr_concatenar(L,[],L).
+lsr_concatenar(L,[E | Es],Ln):- 
+	lsr_agregarElem(L,E,L1),
+	lsr_concatenar(L,Es,L2),
+	append(L1,L2,Ln).

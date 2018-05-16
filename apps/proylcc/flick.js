@@ -5,10 +5,16 @@ var pengine;
 var gridData;
 // Bidimensional array with grid cells elements.
 var cellElems = null;
+// Array with button elements.
+var bElems = null;
 // Number of turns
 var turns = -1;
 // Reference to element displaying turns
 var turnsElem;
+//Lista de ayuda
+var helpList;
+//Modo botones
+var modo = 0;
 
 /**
  * Representation of color enumerate as object where each property key defines an enum value (a color), and the
@@ -70,7 +76,8 @@ function init() {
     });
 
     var buttonsPanelElem = document.getElementById("buttonsPanel");
-
+	var i = 0;
+	bElems = [];
     for (let color in colors) {
         var buttonElem = document.createElement("button");
         buttonElem.className = "colorBtn";
@@ -78,12 +85,28 @@ function init() {
         buttonElem.addEventListener("click", function(e) {
             handleColorClick(color);
         });
+		buttonElem.setAttribute("id",color);
+		bElems[i] = buttonElem;
+		i++;
+		
         buttonsPanelElem.appendChild(buttonElem);
     }
+	
+	
+	helpElem = document.getElementById("helpButton");
+	helpElem.addEventListener("click", function(e) {
+		ayuda();
+    });
+	
+	helpElem2 = document.getElementById("helpButton2");
+	helpElem2.addEventListener("click", function(e) {
+		masayuda();
+    });
+	
 }
 
-/**
- * Callback for Pengine server creation
+	/**
+	 * Callback for Pengine server creation
  */
 
 function handleCreate() {
@@ -95,14 +118,35 @@ function handleCreate() {
  */
 
 function handleSuccess(response) {
-    gridData = response.data[0].Grid;
-    turns++;
-    if (cellElems == null)
-        createGridElems(gridData.length, gridData[0].length);
-    for (let row = 0; row < gridData.length; row++)
-        for (let col = 0; col < gridData[row].length; col++)
-            cellElems[row][col].style.backgroundColor = colorToCss(colorFromProlog(gridData[row][col]));
-    turnsElem.innerHTML = turns;
+	
+    gridDataTemp = response.data[0].Grid;
+	if (gridDataTemp != undefined){
+		turns++;
+		if (cellElems == null)
+			createGridElems(gridDataTemp.length, gridDataTemp[0].length);
+		for (let row = 0; row < gridDataTemp.length; row++)
+			for (let col = 0; col < gridDataTemp[row].length; col++)
+				cellElems[row][col].style.backgroundColor = colorToCss(colorFromProlog(gridDataTemp[row][col]));
+		turnsElem.innerHTML = turns;
+		gridData = gridDataTemp;
+		
+		for (let i = 0; i < 6; i++){
+			bElems[i].innerHTML = "";		
+
+        }
+		
+	}
+   
+   	helpList = response.data[0].ListaAC;
+
+	if (helpList != undefined){
+		for (let i = 0; i < 6; i++){
+			bElems[i].innerHTML = helpList[i];	
+        }
+		
+		
+    }
+
 }
 
 /**
@@ -127,9 +171,31 @@ function createGridElems(numOfRows, numOfCols) {
  */
 
 function handleColorClick(color) {
-    var s = "flick(" + Pengine.stringify(gridData) + "," + colorToProlog(color) + ",Grid)";
-    pengine.ask(s)
+	var helpMsg = document.getElementById("helpMsg");
+	if (modo == 0){
+		var s = "flick(" + Pengine.stringify(gridData) + "," + Pengine.stringify(colorToProlog(color)) + ",Grid)";
+		pengine.ask(s);
+	} else if (modo == 1){
+		helpMsg.innerHTML = "";
+		modo = 0;		
+		var s = "ayudaAdicional(" + Pengine.stringify(gridData) + "," + Pengine.stringify(colorToProlog(color)) + ",ListaAC)";
+		pengine.ask(s);
+	}
+    
 }
+
+function masayuda(){
+	var helpMsg = document.getElementById("helpMsg");
+	helpMsg.innerHTML = "Seleccione el primer color";
+	modo = 1;
+	
+}
+
+function ayuda(){
+	var s ="ayudaBasica(" + Pengine.stringify(gridData) + ", ListaAC)";
+	pengine.ask(s);
+}
+
 
 /**
 * Call init function after window loaded to ensure all HTML was created before
