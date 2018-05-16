@@ -76,10 +76,10 @@ pintar(Ant,Color,Grid,X,Y,Rta,CantPintado):-
 	pintarContorno(Ant,Color,RtaA,X,Y,Rta,CPTotal),
 	%agrego este contador para la ayuda
 	CantPintado is CPTotal+1.
-pintar(Ant,_,Grid,X,Y,Grid,_):-
+pintar(Ant,_,Grid,X,Y,Grid,0):-
 	getColorEnPos(Grid,X,Y,PosCol),
 	Ant\=PosCol.
-pintar(_,_,[G|Grid],X,Y,[G|Grid],_):-
+pintar(_,_,[G|Grid],X,Y,[G|Grid],0):-
 	X<0;
 	Y<0;
 	largo([G|Grid],LF),	X>=LF;
