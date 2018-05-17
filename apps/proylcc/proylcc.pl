@@ -121,7 +121,6 @@ reemplazarEnLista(Color,[L|Ls],X,[L|Rta]):-
 %segun la coordenada ingresada
 cambiarColorEnPosicion(Color,[G|Grid],X,0,[Rta|Grid]):-
 	reemplazarEnLista(Color,G,X,Rta).
-
 cambiarColorEnPosicion(Color,[G|Grid],X,Y,[G|Rta]):-
 	YY is Y-1,
 	cambiarColorEnPosicion(Color,Grid,X,YY,Rta).
@@ -136,17 +135,23 @@ dimensiones([G|Grid],Ancho,Alto):-
 	largo([G|Grid],Ancho),
 	largo(G, Alto).
 
+%hecho para retorna una lista de los colores posibles, sino los tengo que escribir
+%a cada rato
 colores([g,v,b,r,y,p]).
 
+%retorna una lista de lista,donde cada lista interna tiene dos elementos
+%el primer elemento es el Color a jugar y el segundo es la cantidad de elementos
+%que incorpora al jugar dicho color
 listaDeJugadas(Grid,Rta):-
 	colores(Colores),
 	listaDeJugadasCascara(Colores,Grid,Rta).
+%los siguientes predicados necesita ingresar con una lista de los colores a jugar
 listaDeJugadasCascara([],_,[]).
 listaDeJugadasCascara([Color|Ls],Grid,[[Color,CantIncor]|Sig]):-
 	cantIncorpora(Grid,Color,CantIncor),
 	listaDeJugadasCascara(Ls,Grid,Sig).
 
-%metodo para calcular cuantas celdas se incorporan añ cambiar a un cierto color
+%metodo para calcular cuantas celdas se incorporan al cambiar a un cierto color
 cantIncorpora(Grid,Color,Rta):-
 	Grid = [F|_],
 	F = [X|_],
@@ -154,11 +159,18 @@ cantIncorpora(Grid,Color,Rta):-
 	pintar(Color,X,FGrid,0,0,_,RtaB),
 	Rta is (RtaB-RtaA).
 
+%este metodo retorna una una lista de dos elemento
+%el primer elemento es una estructura de dos componeneste que son los dos colores
+%el segundo elemento es la cantidad incorporada jugando esos dos colores
 mejorDosJugas(Grid,Rta):-
 	colores(Colores),
 	mejorDosJugasCascara(Colores,Grid,RtaA)
 	mejorPar(RtaA,Rta).
 
+%este metodo retorna una lista con todos las posibles jugadas dobles con sus cantidades
+%esta lista esta compuesta de listas de dos componentes donde el primer elemento es
+%una estructura de dos colores y el segndo elemento es la cantidad inscorporada
+%jugando esos dos colores
 mejorDosJugasCascara([],_,[]).
 mejorDosJugasCascara([Color|Ls],Grid,[[(Color,Col),CantTotal]|Rta])
 	Grid = [F|_],
@@ -169,6 +181,7 @@ mejorDosJugasCascara([Color|Ls],Grid,[[(Color,Col),CantTotal]|Rta])
 	CantTotal is CantPintado+Cant,
 	mejorDosJugasCascara(Ls,Grid,Rta).
 
+%metodo que devuelve el mejor para de una lista
 mejorPar([],[a,0]).
 mejorPar([[Color,Cantidad]|Ls],Rta):-
 	mejorPar(Ls,[Col,Cant]),
