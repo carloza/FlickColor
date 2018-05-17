@@ -136,10 +136,15 @@ dimensiones([G|Grid],Ancho,Alto):-
 	largo([G|Grid],Ancho),
 	largo(G, Alto).
 
+listaDeJugadas([],_,[]).
+listaDeJugadas([Color|Ls],Grid,[[Color,CantIncor]|Sig]):-
+	cantIncorpora(Grid,Color,CantIncor),
+	listaDeJugadas(Ls,Grid,Sig).
+
 %metodo para calcular cuantas celdas se incorporan añ cambiar a un cierto color
 cantIncorpora(Grid,Color,Rta):-
 	Grid = [F|_],
 	F = [X|_],
 	pintar(X,Color,Grid,0,0,FGrid,RtaA),
-	pintar(Color,aa,FGrid,0,0,_,RtaB),
+	pintar(Color,X,FGrid,0,0,_,RtaB),
 	Rta is RtaB-RtaA.
