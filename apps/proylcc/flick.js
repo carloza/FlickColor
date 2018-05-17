@@ -143,10 +143,16 @@ function handleSuccess(response) {
 		for (let i = 0; i < 6; i++){
 			bElems[i].innerHTML = helpList[i];	
         }
-		
-		
     }
 
+	var victoria = response.data[0].Victoria;
+	if (victoria != undefined){
+		if (victoria == 1){
+			var helpMsg = document.getElementById("helpMsg");
+			helpMsg.innerHTML = "Victoria";
+		}
+	}
+	
 }
 
 /**
@@ -173,7 +179,8 @@ function createGridElems(numOfRows, numOfCols) {
 function handleColorClick(color) {
 	var helpMsg = document.getElementById("helpMsg");
 	if (modo == 0){
-		var s = "flick(" + Pengine.stringify(gridData) + "," + Pengine.stringify(colorToProlog(color)) + ",Grid)";
+		var s = "flick(" + Pengine.stringify(gridData) + "," + Pengine.stringify(colorToProlog(color)) + ",Grid), verificarVictoria(Grid,Victoria)";
+		//var s = "flick(" + Pengine.stringify(gridData) + "," + Pengine.stringify(colorToProlog(color)) + ",Grid)";
 		pengine.ask(s);
 	} else if (modo == 1){
 		helpMsg.innerHTML = "";
@@ -188,7 +195,7 @@ function masayuda(){
 	var helpMsg = document.getElementById("helpMsg");
 	helpMsg.innerHTML = "Seleccione el primer color";
 	modo = 1;
-	
+		
 }
 
 function ayuda(){

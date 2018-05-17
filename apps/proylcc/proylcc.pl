@@ -3,7 +3,8 @@
 		grid/2,
 		flick/3,
 		ayudaBasica/2,
-		ayudaAdicional/3
+		ayudaAdicional/3,
+		verificarVictoria/2
 	]).
 
 
@@ -241,3 +242,14 @@ lsr_concatenar(L,[E | Es],Ln):-
 	lsr_agregarElem(L,E,L1),
 	lsr_concatenar(L,Es,L2),
 	append(L1,L2,Ln).
+	
+/* Lista sin repeticiones */
+
+verificarVictoria(Grid,1):-
+	flick(Grid,y,GridN),
+	grid(3,GridN).
+
+
+verificarVictoria(Grid,0). 
+
+
