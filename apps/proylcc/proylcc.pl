@@ -136,10 +136,15 @@ dimensiones([G|Grid],Ancho,Alto):-
 	largo([G|Grid],Ancho),
 	largo(G, Alto).
 
-listaDeJugadas([],_,[]).
-listaDeJugadas([Color|Ls],Grid,[[Color,CantIncor]|Sig]):-
+colores([g,v,b,r,y,p]).
+
+listaDeJugadas(Grid,Rta):-
+	colores(Colores),
+	listaDeJugadasCascara(Colores,Grid,Rta).
+listaDeJugadasCascara([],_,[]).
+listaDeJugadasCascara([Color|Ls],Grid,[[Color,CantIncor]|Sig]):-
 	cantIncorpora(Grid,Color,CantIncor),
-	listaDeJugadas(Ls,Grid,Sig).
+	listaDeJugadasCascara(Ls,Grid,Sig).
 
 %metodo para calcular cuantas celdas se incorporan añ cambiar a un cierto color
 cantIncorpora(Grid,Color,Rta):-
@@ -147,4 +152,26 @@ cantIncorpora(Grid,Color,Rta):-
 	F = [X|_],
 	pintar(X,Color,Grid,0,0,FGrid,RtaA),
 	pintar(Color,X,FGrid,0,0,_,RtaB),
-	Rta is RtaB-RtaA.
+	Rta is (RtaB-RtaA).
+
+mejorDosJugas(Grid,Rta):-
+	colores(Colores),
+	mejorDosJugasCascara(Colores,Grid,Rta).
+
+mejorDosJugasCascara([],_,[]).
+mejorDosJugasCascara([Color|Ls],Grid,[[Color,Col,CantTotal]|Rta])
+	Grid = [F|_],
+	F = [X|_],
+	pintar(X,Color,Grid,0,0,FGrid,CantPintado),
+	listaDeJugadas(Grid,LDJ),
+	mejorPar(LFJ,[Col,Cant]),
+	CantTotal is CantPintado+Cant,
+	mejorDosJugasCascara(Ls,Grid,Rta).
+
+mejorPar([],[a,0]).
+mejorPar([[Color,Cantidad]|Ls],Rta):-
+	mejorPar(Ls,[Col,Cant]),
+	Cant>Cantidad,
+	Rta = [Col,Cant];
+	Rta = [Color,Cantidad].
+
