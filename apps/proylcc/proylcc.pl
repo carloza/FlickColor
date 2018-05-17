@@ -156,10 +156,11 @@ cantIncorpora(Grid,Color,Rta):-
 
 mejorDosJugas(Grid,Rta):-
 	colores(Colores),
-	mejorDosJugasCascara(Colores,Grid,Rta).
+	mejorDosJugasCascara(Colores,Grid,RtaA)
+	mejorPar(RtaA,Rta).
 
 mejorDosJugasCascara([],_,[]).
-mejorDosJugasCascara([Color|Ls],Grid,[[Color,Col,CantTotal]|Rta])
+mejorDosJugasCascara([Color|Ls],Grid,[[(Color,Col),CantTotal]|Rta])
 	Grid = [F|_],
 	F = [X|_],
 	pintar(X,Color,Grid,0,0,FGrid,CantPintado),
