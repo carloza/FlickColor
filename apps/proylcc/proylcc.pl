@@ -40,6 +40,40 @@ grid(2, [
 		]).
 
 grid(3, [
+		 [y,y,b,g,v,y,p,v,b,p,v,p,v,r],
+		 [y,y,p,p,g,v,v,r,r,b,g,v,p,r],
+		 [p,g,v,y,y,r,b,r,v,r,v,y,p,y],
+		 [b,y,v,g,r,v,r,g,b,y,b,y,p,g],
+		 [b,y,g,y,b,g,r,g,p,g,p,r,y,y],
+		 [r,b,b,v,g,v,p,y,r,v,r,y,p,g],
+		 [r,p,g,y,v,y,r,b,v,r,b,y,r,v],
+		 [r,b,b,v,p,y,p,r,b,g,p,y,b,r],
+		 [r,y,y,y,y,p,y,g,r,g,y,v,y,p],
+		 [y,p,y,v,y,g,g,v,r,b,v,y,r,g],
+		 [r,b,v,g,b,r,y,p,b,p,y,r,y,y],
+		 [v,b,g,v,v,r,g,y,b,b,b,b,r,y],
+		 [v,v,b,r,p,b,g,g,p,p,b,y,v,p],
+		 [v,g,p,b,v,v,g,g,g,b,v,g,g,g]
+		]).
+
+grid(4, [
+		 [g,y,b,g,v,y,p,v,b,p,v,p,v,r],
+		 [r,g,p,p,g,v,v,r,r,b,g,v,p,r],
+		 [b,v,g,y,b,g,r,g,p,g,p,r,y,y],
+		 [r,p,y,g,y,p,y,g,r,g,y,v,y,p],
+		 [y,p,y,v,g,y,g,v,r,b,v,y,r,g],
+		 [r,b,v,g,b,g,y,p,b,p,y,r,y,y],
+		 [p,g,v,y,y,r,g,r,v,r,v,y,p,y],
+		 [b,y,v,g,r,v,r,g,b,y,b,y,p,g],
+		 [r,b,b,v,g,v,p,y,g,v,r,y,p,g],
+		 [v,b,g,v,v,r,g,y,b,g,b,b,r,y],
+		 [v,v,b,r,p,b,g,g,p,p,g,y,v,p],
+		 [r,p,g,y,v,y,r,b,v,r,b,g,r,v],
+		 [r,b,b,v,p,y,p,r,b,g,p,y,g,r],
+		 [v,g,p,b,v,v,g,g,g,b,v,g,r,g]
+		]).
+
+grid(5, [
 		 [y,y,y,y,y,y,y,y,y,y,y,y,y,y],
 		 [y,y,y,y,y,y,y,y,y,y,y,y,y,y],
 		 [y,y,y,y,y,y,y,y,y,y,y,y,y,y],
