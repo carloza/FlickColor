@@ -263,20 +263,12 @@ function createGridElems(numOfRows, numOfCols) {
  */
 
 function handleColorClick(color) {
-	var helpMsg = document.getElementById("helpMsg");
 
 	if (modo == 0){
 		//Modo normal de juego:
 		var s = "flick(" + Pengine.stringify(gridData) + "," + Pengine.stringify(colorToProlog(color)) + ",Grid), verificarVictoria(Grid,Victoria)";
 		pengine.ask(s);
-	} else if (modo == 1){
-		//Modo seleccionar color para ayuda adicional
-		helpMsg.innerHTML = "";
-		modo = 0;	
-		helpElem.disabled = false;		
-		var s = "ayudaAdicional(" + Pengine.stringify(gridData) + "," + Pengine.stringify(colorToProlog(color)) + ",ListaAC)";
-		pengine.ask(s);
-	}
+	} 
     
 }
 
@@ -287,12 +279,9 @@ Para esto, seteo el modo en 1, haciendo que el oyente de los botones de colores 
 */
 function masayuda(){
 	if (modo == 0){
-		var helpMsg = document.getElementById("helpMsg");
-		helpMsg.innerHTML = "Seleccione el primer color";
-		helpElem.disabled = true;
-		modo = 1; //Seteo modo seleccionar color para ayuda adicional
+		var s = "ayudaAdicional(" + Pengine.stringify(gridData) + ",ListaAC)";
+		pengine.ask(s);
 	}
-	
 		
 }
 
