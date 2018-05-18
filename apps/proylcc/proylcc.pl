@@ -169,26 +169,23 @@ ayudaBasica2(Grid,[Color|Ls],[R|Rta]):-
 /*
 Este metodo retorna una ayuda aun mayor que la básica. Mediante un primer color, se averigua cuantas celdas adyacentes nuevas pueden obtenerse en caso de apretar dicho primer boton y luego cualquiera de los otros seis. 
 */
+/*
+Este metodo retorna una ayuda aun mayor que la básica. Mediante un primer color, se averigua cuantas celdas adyacentes nuevas pueden obtenerse en caso de apretar dicho primer boton y luego cualquiera de los otros seis. 
+*/
+ayudaAdicional(Grid,Rta):-
+	colores(Colores),
+	ayudaBasica(Grid,L),
+	ayudaAdicional2(Grid,L,Colores,Rta).
 
-ayudaAdicional(Grid,[Red,Violet,Pink,Green,Blue,Yellow]):-
-	ayudaBasica(Grid,[Red1,Violet1,Pink1,Green1,Blue1,Yellow1]),
-	obtenerMejorJugada(Grid,"r", Red2),
-	obtenerMejorJugada(Grid,"v", Violet2),
-	obtenerMejorJugada(Grid,"p", Pink2),
-	obtenerMejorJugada(Grid,"g", Green2),
-	obtenerMejorJugada(Grid,"b", Blue2),
-	obtenerMejorJugada(Grid,"y", Yellow2),
-	Red is Red1 + Red2,
-	Violet is Violet1 + Violet2,
-	Pink is Pink1 + Pink2,
-	Green is Green1 + Green2,
-	Blue is Blue1 + Blue2,
-	Yellow is Yellow1 + Yellow2.
-	
-obtenerMejorJugada(Grid,Color,Cant):-
-	flick(Grid,Color,GridN),
-	ayudaBasica(GridN,List),
-	max_member(Cant,List).	
+ayudaAdicional2(_,[],[],[]).
+ayudaAdicional2(Grid,[Cant | Rs],[Color|Ls],[R|Rta]):-
+	Grid = [F|_],
+	F = [X|_],
+	flick(Grid,Color,FGrid),
+	ayudaBasica(FGrid,L),
+	max_member(CantSegunda,L),
+	R is Cant + CantSegunda,
+	ayudaAdicional2(Grid,Rs,Ls,Rta).
 
 %Verifica si se dio una victoria mediante la grid que recibe.
 %Retorna 1 en caso de victoria, 0 en caso contrario.  	
@@ -198,4 +195,3 @@ verificarVictoria(Grid,1):-
 
 
 verificarVictoria(Grid,0). 
-
