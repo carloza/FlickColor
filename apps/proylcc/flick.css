@@ -45,6 +45,13 @@
     text-transform: uppercase;
 }
 
+.mensajeria {
+    display: flex;
+    text-transform: uppercase;
+    justify-content: center;
+    color: red;
+}
+
 #turnsNum {
     margin-top: 10px;
 }
