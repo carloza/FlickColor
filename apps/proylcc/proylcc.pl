@@ -142,7 +142,7 @@ dimensiones([G|Grid],Ancho,Alto):-
 
 %hecho para retorna una lista de los colores posibles, sino los tengo que escribir
 %a cada rato
-colores([g,v,b,r,y,p]).
+colores(["r","v","p","g","b","y"]).
 
 %retorna una lista de lista,donde cada lista interna tiene dos elementos
 %el primer elemento es el Color a jugar y el segundo es la cantidad de elementos
@@ -170,32 +170,72 @@ cantIncorpora(Grid,Color,Rta):-
 /*
 Un metodo cascara que retorna una lista con cada uno de los adyacentes que se agregan a la lista, haciendo uso del metodo cantIncorpora. 
 */
-ayudaBasica(Grid,[Red,Violet,Pink,Green,Blue,Yellow]):-
-	cantIncorpora(Grid,"r",Red),
-	cantIncorpora(Grid,"v",Violet),
-	cantIncorpora(Grid,"p",Pink),
-	cantIncorpora(Grid,"g",Green),
-	cantIncorpora(Grid,"b",Blue),
-	cantIncorpora(Grid,"y",Yellow).
-	
+%ayudaBasica(Grid,[Red,Violet,Pink,Green,Blue,Yellow]):-
+%	cantIncorpora(Grid,"r",Red),
+%	cantIncorpora(Grid,"v",Violet),
+%	cantIncorpora(Grid,"p",Pink),
+%	cantIncorpora(Grid,"g",Green),
+%	cantIncorpora(Grid,"b",Blue),
+%	cantIncorpora(Grid,"y",Yellow).
+
+ayudaBasica(Grid,Rta):-
+	colores(Colores),
+	ayudaBasica2(Grid,Colores,Rta).
+
+ayudaBasica2(_,[],[]).
+ayudaBasica2(Grid,[Color|Ls],[R|Rta]):-
+	cantIncorpora(Grid,Color,R),
+	ayudaBasica2(Grid,Ls,Rta).
 /*
 Este metodo retorna una ayuda aun mayor que la básica. Mediante un primer color, se averigua cuantas celdas adyacentes nuevas pueden obtenerse en caso de apretar dicho primer boton y luego cualquiera de los otros seis. 
 */
-ayudaAdicional(Grid,PrimerColor,[Red,Violet,Pink,Green,Blue,Yellow]):-
-	cantIncorpora(Grid,PrimerColor,PrimerColorBeneficio),
-	flick(Grid,PrimerColor,GridN),
-	ayudaBasica(GridN,[Red1,Violet1,Pink1,Green1,Blue1,Yellow1]),
-	Red is Red1 + PrimerColorBeneficio,
-	Violet is Violet1 + PrimerColorBeneficio,
-	Pink is Pink1 + PrimerColorBeneficio,
-	Green is Green1 + PrimerColorBeneficio,
-	Blue is Blue1 + PrimerColorBeneficio,
-	Yellow is Yellow1 + PrimerColorBeneficio.
+%%%ayudaAdicional(Grid,PrimerColor,[Red,Violet,Pink,Green,Blue,Yellow]):-
+%%%	cantIncorpora(Grid,PrimerColor,PrimerColorBeneficio),
+%%%	flick(Grid,PrimerColor,GridN),
+%%%	ayudaBasica(GridN,[Red1,Violet1,Pink1,Green1,Blue1,Yellow1]),
+%%%	Red is Red1 + PrimerColorBeneficio,
+%%%	Violet is Violet1 + PrimerColorBeneficio,
+%%%	Pink is Pink1 + PrimerColorBeneficio,
+%%%	Green is Green1 + PrimerColorBeneficio,
+%%%	Blue is Blue1 + PrimerColorBeneficio,
+%%%	Yellow is Yellow1 + PrimerColorBeneficio.
 	
+ayudaAdicional(Grid,[Red,Violet,Pink,Green,Blue,Yellow]):-
+	Grid = [F|_],
+	F = [X|_],
+	%la mejor para rojo
+	pintar(X,"r",Grid,0,0,FGrid,CantRed),
+	ayudaBasica(FGrid,LRed),
+	max_member(CantSegRed,LRed),
+	Red is CantRed+CantSegRed,
+	%la mejor para violeta
+	pintar(X,"v",Grid,0,0,FGrid,CantViolet),
+	ayudaBasica(FGrid,LViolet),
+	max_member(CantSegViolet,LViolet),
+	Violet is CantViolet+CantSegViolet,
+	%la mejor para rosa
+	pintar(X,"p",Grid,0,0,FGrid,CantPink),
+	ayudaBasica(FGrid,LPink),
+	max_member(CantSegPink,LPink),
+	Pink is CantPink+CantSegPink,
+	%la mejor para verde
+	pintar(X,"g",Grid,0,0,FGrid,CantGreen),
+	ayudaBasica(FGrid,LGreen),
+	max_member(CantSegGreen,LGreen),
+	Green is CantGreen+CantSegGreen,	
+	%la mejor para Azul
+	pintar(X,"b",Grid,0,0,FGrid,CantBlue),
+	ayudaBasica(FGrid,LBlue),
+	max_member(CantSegBlue,LBlue),
+	Blue is CantBlue+CantSegBlue,
+	%la mejor para amarillo
+	pintar(X,"y",Grid,0,0,FGrid,CantYellow),
+	ayudaBasica(FGrid,LYellow),
+	max_member(CantSegYellow,LYellow),
+	Yellow is CantYellow+CantSegYellow,
 
 %Verifica si se dio una victoria mediante la grid que recibe.
-%Retorna 1 en caso de victoria, 0 en caso contrario.  
-	
+%Retorna 1 en caso de victoria, 0 en caso contrario.  	
 verificarVictoria(Grid,1):-
 	flick(Grid,y,GridN),
 	grid(3,GridN).
