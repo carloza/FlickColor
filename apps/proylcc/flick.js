@@ -120,7 +120,10 @@ function init() {
 		Establezco un oyente en los radio buttons, el cual permite obtener una previsualizacion a la hora de inicar el juego.
 		Una vez iniciado el juego, el modo ini pasa a 1 y este oyente ya no tiene efecto. 
 	*/
-	for (let i=0; i < 3; i++) {
+	var val;
+    var radios = document.getElementsByName("grid");
+    
+    for (let i=0, len=radios.length; i<len; i++) {
 		document.getElementById("grid"+(i+1)).addEventListener("click",function(e){
 			if(ini == 0){
 				pengine.ask("grid("+(i+1)+",Grid)");
@@ -129,12 +132,14 @@ function init() {
 			
 		});
     }
+
+
 	
 	estadoBotones(true);
 }
 
 /*
-	Oyente del boton "ini". Se encarga de setear la grilla predeterminada elegida por el jugador, y de habilitar los botones para que pueda comenzar a jugar. 
+	Oyente del boton "ini". Se encarga de setear la grilla predeterminada elegida por el jugador y de habilitar los botones para que pueda comenzar a jugar. 
 */
 
 function handleIniciar(){
@@ -142,7 +147,6 @@ function handleIniciar(){
     var val;
     var radios = document.getElementsByName("grid");
     
-    // loop through list of radio buttons
     for (var i=0, len=radios.length; i<len; i++) {
         if ( radios[i].checked ) { 
             val = radios[i].value; 
