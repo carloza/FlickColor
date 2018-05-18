@@ -1,3 +1,4 @@
+<meta charset="UTF-8"/> 
 <html lang="en">
     <head>
         <script src="/vendor/jquery/jquery-2.0.3.min.js"></script>
@@ -12,6 +13,24 @@
                 <div class="turnsPanel">
                     <div class="turnsLab">Turns</div>
                     <div id="turnsNum">0</div>
+                </div>
+				<div id="panelInicio">
+                    <center>
+						
+						<button id="ini">Iniciar</button>
+						<p>Grilla:<br>
+						<input type="radio" name="grid" id="grid1" value="1" checked="checked"> 1<br>
+						<input type="radio" name="grid" id="grid2" value="2"> 2<br>
+						<input type="radio" name="grid" id="grid3" value="3"> 3</p>
+						
+					</center>
+                </div>
+				<div id="panelBotones">
+                    <center>
+						<button id="helpButton">Ayuda</button>
+						<button id="helpButton2">¡Más ayuda!</button>
+						<div id="helpMsg">Seleccione una grilla y presione iniciar.</div>
+					</center>
                 </div>
             </div>
             <div id="grid"></div>

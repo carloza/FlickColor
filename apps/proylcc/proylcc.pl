@@ -1,7 +1,8 @@
 :- module(proylcc, 
 	[  
 		grid/2,
-		flick/3
+		flick/3,
+		ayudaBasica/2
 	]).
 
 grid(1, [
@@ -60,7 +61,11 @@ grid(3, [
 % flick(+Grid, +Color, -FGrid)
 %
 % FGrid es el resultado de hacer 'flick' de la grilla Grid con el color Color. 
-
+% En caso de que el color sea igual al color adyacente actual, se retorna la misma grilla.
+flick(Grid,Color,Grid):-
+	Grid = [F|_],
+	F = [Color|_].
+	
 flick(Grid,Color,FGrid):-
 	Grid = [F|_],
 	F = [X|_],
@@ -152,6 +157,9 @@ listaDeJugadasCascara([Color|Ls],Grid,[[Color,CantIncor]|Sig]):-
 	listaDeJugadasCascara(Ls,Grid,Sig).
 
 %metodo para calcular cuantas celdas se incorporan al cambiar a un cierto color
+cantIncorpora(Grid,Color,0):-
+	getColorEnPos(Grid,0,0,Color).
+
 cantIncorpora(Grid,Color,Rta):-
 	Grid = [F|_],
 	F = [X|_],
@@ -159,33 +167,39 @@ cantIncorpora(Grid,Color,Rta):-
 	pintar(Color,X,FGrid,0,0,_,RtaB),
 	Rta is (RtaB-RtaA).
 
-%este metodo retorna una una lista de dos elemento
-%el primer elemento es una estructura de dos componeneste que son los dos colores
-%el segundo elemento es la cantidad incorporada jugando esos dos colores
-mejorDosJugas(Grid,Rta):-
-	colores(Colores),
-	mejorDosJugasCascara(Colores,Grid,RtaA)
-	mejorPar(RtaA,Rta).
+/*
+Un metodo cascara que retorna una lista con cada uno de los adyacentes que se agregan a la lista, haciendo uso del metodo cantIncorpora. 
+*/
+ayudaBasica(Grid,[Red,Violet,Pink,Green,Blue,Yellow]):-
+	cantIncorpora(Grid,"r",Red),
+	cantIncorpora(Grid,"v",Violet),
+	cantIncorpora(Grid,"p",Pink),
+	cantIncorpora(Grid,"g",Green),
+	cantIncorpora(Grid,"b",Blue),
+	cantIncorpora(Grid,"y",Yellow).
+	
+/*
+Este metodo retorna una ayuda aun mayor que la básica. Mediante un primer color, se averigua cuantas celdas adyacentes nuevas pueden obtenerse en caso de apretar dicho primer boton y luego cualquiera de los otros seis. 
+*/
+ayudaAdicional(Grid,PrimerColor,[Red,Violet,Pink,Green,Blue,Yellow]):-
+	cantIncorpora(Grid,PrimerColor,PrimerColorBeneficio),
+	flick(Grid,PrimerColor,GridN),
+	ayudaBasica(GridN,[Red1,Violet1,Pink1,Green1,Blue1,Yellow1]),
+	Red is Red1 + PrimerColorBeneficio,
+	Violet is Violet1 + PrimerColorBeneficio,
+	Pink is Pink1 + PrimerColorBeneficio,
+	Green is Green1 + PrimerColorBeneficio,
+	Blue is Blue1 + PrimerColorBeneficio,
+	Yellow is Yellow1 + PrimerColorBeneficio.
+	
 
-%este metodo retorna una lista con todos las posibles jugadas dobles con sus cantidades
-%esta lista esta compuesta de listas de dos componentes donde el primer elemento es
-%una estructura de dos colores y el segndo elemento es la cantidad inscorporada
-%jugando esos dos colores
-mejorDosJugasCascara([],_,[]).
-mejorDosJugasCascara([Color|Ls],Grid,[[(Color,Col),CantTotal]|Rta])
-	Grid = [F|_],
-	F = [X|_],
-	pintar(X,Color,Grid,0,0,FGrid,CantPintado),
-	listaDeJugadas(Grid,LDJ),
-	mejorPar(LFJ,[Col,Cant]),
-	CantTotal is CantPintado+Cant,
-	mejorDosJugasCascara(Ls,Grid,Rta).
+%Verifica si se dio una victoria mediante la grid que recibe.
+%Retorna 1 en caso de victoria, 0 en caso contrario.  
+	
+verificarVictoria(Grid,1):-
+	flick(Grid,y,GridN),
+	grid(3,GridN).
 
-%metodo que devuelve el mejor para de una lista
-mejorPar([],[a,0]).
-mejorPar([[Color,Cantidad]|Ls],Rta):-
-	mejorPar(Ls,[Col,Cant]),
-	Cant>Cantidad,
-	Rta = [Col,Cant];
-	Rta = [Color,Cantidad].
+
+verificarVictoria(Grid,0). 
 
