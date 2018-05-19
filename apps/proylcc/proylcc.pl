@@ -3,7 +3,8 @@
 		grid/2,
 		flick/3,
 		ayudaBasica/2,
-		ayudaAdicional/2
+		ayudaAdicional/2,
+		verificarVictoria/2
 	]).
 
 grid(1, [
