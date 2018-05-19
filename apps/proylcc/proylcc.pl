@@ -2,7 +2,8 @@
 	[  
 		grid/2,
 		flick/3,
-		ayudaBasica/2
+		ayudaBasica/2,
+		ayudaAdicional/2
 	]).
 
 grid(1, [
@@ -97,9 +98,9 @@ grid(5, [
 % FGrid es el resultado de hacer 'flick' de la grilla Grid con el color Color. 
 % En caso de que el color sea igual al color adyacente actual, se retorna la misma grilla.
 flick(Grid,Color,Grid):-
+	%este es una suerte de "caso base" para cuando ingresa el mismo color que la esquina sup izq
 	Grid = [F|_],
 	F = [Color|_].
-	
 flick(Grid,Color,FGrid):-
 	Grid = [F|_],
 	F = [X|_],
@@ -116,9 +117,11 @@ pintar(Ant,Color,Grid,X,Y,Rta,CantPintado):-
 	%agrego este contador para la ayuda
 	CantPintado is CPTotal+1.
 pintar(Ant,_,Grid,X,Y,Grid,0):-
+	%aca controlo que no sea "adyacenteC*", es decir, no es del mismo color
 	getColorEnPos(Grid,X,Y,PosCol),
 	Ant\=PosCol.
 pintar(_,_,[G|Grid],X,Y,[G|Grid],0):-
+	%aca controlo que no se me caiga de la grilla
 	X<0;
 	Y<0;
 	largo([G|Grid],LF),	X>=LF;
@@ -169,11 +172,6 @@ largo([],0).
 largo([_|Xs],Rta):- largo(Xs,Rtaa),
 	Rta is Rtaa+1.
 
-%metodo para calcular las dimenciones de la grilla
-dimensiones([G|Grid],Ancho,Alto):-
-	largo([G|Grid],Ancho),
-	largo(G, Alto).
-
 %hecho para retorna una lista de los colores posibles, sino los tengo que escribir
 %a cada rato
 colores(["r","v","p","g","b","y"]).
@@ -181,7 +179,6 @@ colores(["r","v","p","g","b","y"]).
 %metodo para calcular cuantas celdas se incorporan al cambiar a un cierto color
 cantIncorpora(Grid,Color,0):-
 	getColorEnPos(Grid,0,0,Color).
-
 cantIncorpora(Grid,Color,Rta):-
 	Grid = [F|_],
 	F = [X|_],
@@ -190,7 +187,8 @@ cantIncorpora(Grid,Color,Rta):-
 	Rta is (RtaB-RtaA).
 
 /*
-Un metodo cascara que retorna una lista con cada uno de los adyacentes que se agregan a la lista, haciendo uso del metodo cantIncorpora. 
+Un metodo cascara que retorna una lista con cada uno de los adyacentes que se agregan a la
+lista, haciendo uso del metodo cantIncorpora. 
 */
 ayudaBasica(Grid,Rta):-
 	colores(Colores),
@@ -201,10 +199,9 @@ ayudaBasica2(Grid,[Color|Ls],[R|Rta]):-
 	cantIncorpora(Grid,Color,R),
 	ayudaBasica2(Grid,Ls,Rta).
 /*
-Este metodo retorna una ayuda aun mayor que la básica. Mediante un primer color, se averigua cuantas celdas adyacentes nuevas pueden obtenerse en caso de apretar dicho primer boton y luego cualquiera de los otros seis. 
-*/
-/*
-Este metodo retorna una ayuda aun mayor que la básica. Mediante un primer color, se averigua cuantas celdas adyacentes nuevas pueden obtenerse en caso de apretar dicho primer boton y luego cualquiera de los otros seis. 
+Este metodo retorna una ayuda aun mayor que la básica. Mediante un primer color, se averigua
+cuantas celdas adyacentes nuevas pueden obtenerse en caso de apretar dicho primer boton y luego
+cualquiera de los otros seis. 
 */
 ayudaAdicional(Grid,Rta):-
 	colores(Colores),
@@ -213,8 +210,6 @@ ayudaAdicional(Grid,Rta):-
 
 ayudaAdicional2(_,[],[],[]).
 ayudaAdicional2(Grid,[Cant | Rs],[Color|Ls],[R|Rta]):-
-	Grid = [F|_],
-	F = [X|_],
 	flick(Grid,Color,FGrid),
 	ayudaBasica(FGrid,L),
 	max_member(CantSegunda,L),
@@ -222,10 +217,8 @@ ayudaAdicional2(Grid,[Cant | Rs],[Color|Ls],[R|Rta]):-
 	ayudaAdicional2(Grid,Rs,Ls,Rta).
 
 %Verifica si se dio una victoria mediante la grid que recibe.
-%Retorna 1 en caso de victoria, 0 en caso contrario.  	
+%Retorna 1 en caso de victoria, 0 en caso contrario. 
 verificarVictoria(Grid,1):-
 	flick(Grid,y,GridN),
 	grid(3,GridN).
-
-
-verificarVictoria(Grid,0). 
+verificarVictoria(_,0).
