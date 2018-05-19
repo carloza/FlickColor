@@ -221,5 +221,5 @@ ayudaAdicional2(Grid,[Cant | Rs],[Color|Ls],[R|Rta]):-
 %Retorna 1 en caso de victoria, 0 en caso contrario. 
 verificarVictoria(Grid,1):-
 	flick(Grid,y,GridN),
-	grid(3,GridN).
+	grid(5,GridN).
 verificarVictoria(_,0).
